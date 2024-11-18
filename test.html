@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <style>
+            #popup-container .popup {
+                display: none;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent backdrop */
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+        
+            #popup-container .popup-content {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                max-width: 500px;
+                text-align: center;
+            }
+        
+            @media (max-width: 600px) {
+                #popup-container .popup-content {
+                    width: 90%;
+                }
+            }
+        </style>
+        
+        <div id="popup-container"></div>
+        
+        <script>
+        const popupConfig = {
+            title: "Welcome to Our Site!",
+            message: "Stay updated with our latest news.",
+            imageUrl: "path/to/image.jpg",
+            buttonLabel: "Subscribe",
+            buttonUrl: "https://yourwebsite.com/subscribe",
+            triggerEvent: "onLoad", // Options: onLoad, onScroll, onDelay
+            delayTime: 5000, // in milliseconds, used if triggerEvent is onDelay
+            scrollPercentage: 50, // used if triggerEvent is onScroll
+            animationType: "fadeIn", // Options: fadeIn, slideIn
+        };
+        
+        function createPopup(config) {
+            const popupContainer = document.getElementById('popup-container');
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+        
+            const popupContent = document.createElement('div');
+            popupContent.className = 'popup-content ' + config.animationType;
+            popupContent.innerHTML = `
+                <img src="${config.imageUrl}" alt="Popup Image">
+                <h2>${config.title}</h2>
+                <p>${config.message}</p>
+                <a href="${config.buttonUrl}" class="btn">${config.buttonLabel}</a>
+            `;
+        
+            popup.appendChild(popupContent);
+            popupContainer.appendChild(popup);
+        
+            if (config.animationType === 'fadeIn') {
+                setTimeout(() => {
+                    popup.style.display = 'block';
+                    popup.style.opacity = 1;
+                }, 0);
+            }
+        
+            popup.addEventListener('click', (event) => {
+                if (event.target === popup) {
+                    popup.style.display = 'none';
+                }
+            });
+        }
+        
+        function initPopupTriggers(config) {
+            if (config.triggerEvent === 'onLoad') {
+                createPopup(config);
+            } else if (config.triggerEvent === 'onScroll') {
+                window.addEventListener('scroll', () => {
+                    const triggerPoint = window.innerHeight * config.scrollPercentage / 100;
+                    if (window.scrollY > triggerPoint) {
+                        createPopup(config);
+                    }
+                });
+            } else if (config.triggerEvent === 'onDelay') {
+                setTimeout(() => createPopup(config), config.delayTime);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initPopupTriggers(popupConfig);
+        });
+        </script>
+    </body>
+</html>
