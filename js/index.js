@@ -6,8 +6,6 @@ await app.init({
     width: window.innerWidth,
     height: 0,
     backgroundAlpha:0,
-    antialias: true,
-    transparent: true,
     resolution: 1
 });
 //console.log(document.body.getElementsByClassName('canvas'))
@@ -47,37 +45,50 @@ let sprites=[];
 let mirrorsprites=[];
 let cursor = 0;
 
-let iconSize = [s(.36),s(.49)];
+let iconSize = [0,0];
+
+function styleCity(city,root) {
+
+    let bg = root.getChildByName('bg');
+    let icon = root.getChildByName('icon');
+
+    iconSize = [s(.36),s(.49)];
+    bg.width = iconSize[0];
+    bg.height = iconSize[1];
+    bg.tint = 0xFFFFFF;
+
+    let k = .75;
+    if (city["code"]==='rostov') {
+        k=.98;
+    }
+    icon.width = bg.width*k;
+    icon.height = bg.height*k;
+    
+    root.x=w(.5);
+    root.y=h(1);
+}
 
 function loadCity(city,array) {
-    iconSize = [s(.36),s(.49)];
     // SPRITE CREATION FOR EACH CITY
 
     let root = new PIXI.Container();
 
     let bg = PIXI.Sprite.from('img/city/bg.png');
-    bg.width = iconSize[0];
-    bg.height = iconSize[1];
-    bg.tint = 0xFFFFFF;
 
     let iconPath = 'img/city/'+city["code"]+'.png';
     PIXI.Assets.load(iconPath).then((texture) => {
         let icon = PIXI.Sprite.from(iconPath);
-        let k = .75;
-        if (city["code"]==='rostov') {
-            k=.98;
-        }
-        icon.width = bg.width*k;
-        icon.height = bg.height*k;
     
+        icon.name='icon';
         bg.name='bg';
+
         setup(bg,root);
         setup(icon,root);
+
+        styleCity(city, root);
     });
     
-    setup(root,app.stage)
-    root.x=w(.5);
-    root.y=h(1);
+    setup(root,app.stage);
 
     root.eventMode = 'dynamic';
     root.hovered=false;
@@ -95,7 +106,6 @@ function loadCity(city,array) {
         root.heldTime=elapsed;
     });
     root.on('pointerup', (event) => {
-        console.log(root.heldTime-elapsed);
         if (root.hovered && root.held && elapsed-root.heldTime < .25)
             root.clicks++;
         root.held=false;
@@ -162,9 +172,10 @@ function pick(cursor) {
 }
 
 function popup() {
-    let section = document.getElementById(cityfocus['code']);
+    return;
+    //let section = document.getElementById(cityfocus['code']);
 
-    section.scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
+    //section.scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
 }
 
 // GUI
@@ -225,6 +236,7 @@ app.stage.on('pointerup', (event) => {
 });
 app.stage.on('pointermove', (event) => {
     if (swiping) {
+        scrollBy({top:-event.movement.y});
         rotate(-event.movement.x/w(.15));
     }
 });
@@ -323,15 +335,15 @@ app.ticker.add((ticker) => {
         let x=root.x;
         let y=root.y;
         
-        if (dist<=maxDist) {
+        if (dist-.2<=maxDist) {
             x = w(.5)+pos*Math.min(w(offset)/1.6,h(offset));
             y = (s(ymargin)+h(ymargin))/2;
         }
         else {
             if (dist-1>maxDist)
                 x = w(1)-x;
-            y = h(1)+bg.height*1.2;
-            scale = 0;
+            y = h(dist/maxDist)+bg.height*1.2;
+            scale = 1/dist;
         }
 
         if (root.hovered && focused) {
@@ -349,7 +361,7 @@ app.ticker.add((ticker) => {
         if (root.clicks>0) {
 
             if (dist<1) {
-                pick(cities.at(i%cities.length));
+                pick(i%cities.length);
                 popup();
             }
             else {
@@ -360,7 +372,7 @@ app.ticker.add((ticker) => {
         }
         
         if (focused) {
-            root.x += d*(x-root.x)*6;
+            root.x += d*(x-root.x)*8;
             root.y += d*(y-root.y)*4;
             root.scale.x += d*(scale-root.scale.x)*4;
             root.scale.y += d*(scale-root.scale.y)*4;
@@ -379,13 +391,27 @@ app.ticker.add((ticker) => {
         root.y = Math.min(h(2), root.y);
     }
 });
+    
+fetch("json/citydata.json").then((res) => {
+    if (!res.ok)
+        throw new Error(res.status);
+    return res.json();
+}).then((data) => {
+    load(data);
+    pick(0);
+}).catch((error) => {
+    throw new Error(error);
+});
 
 function updateSize() {
     app.renderer.resize(window.innerWidth,Math.min(window.innerWidth*1.2,window.innerHeight)/1.5);
-    sprites.map((item) => { app.stage.removeChild(item); });
-    sprites=[];
-    mirrorsprites.map((item) => { app.stage.removeChild(item); });
-    mirrorsprites=[];
+
+    let i = 0;
+    sprites.map((item) => {
+        styleCity(cities[i],item);
+        styleCity(cities[i],mirrorsprites[i]);
+        i++;
+    });
 
     let arrowSize = s(.12);
     arrowLeft.width=arrowSize;
@@ -395,16 +421,6 @@ function updateSize() {
 
     ftsz = FTSZ * w(1) / 1920 / 3 + FTSZ/1.5;
     citynameT.style.fontSize=ftsz;
-    
-    fetch("json/citydata.json").then((res) => {
-        if (!res.ok)
-            throw new Error(res.status);
-        return res.json();
-    }).then((data) => {
-        load(data);
-    }).catch((error) => {
-        throw new Error(error);
-    });
 }
 updateSize();
 app.canvas.onresize = (event) => {
