@@ -44,6 +44,10 @@ hr {
 hr.thin {
     width: 50%;
 }
+hr.transparent {
+    opacity: 0;
+    border-top: 1px;
+}
 
 div {
     margin: auto;
