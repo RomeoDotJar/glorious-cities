@@ -39,7 +39,7 @@ dt {
 hr {
     margin-top:30px;
     margin-bottom:30px;
-    border-top: 2px solid #e44;
+    border-top: 2px solid #e62;
 }
 hr.thin {
     width: 50%;
@@ -79,20 +79,31 @@ div.city {
     display: none;
 }
 
-img {
+img.gallery {
     max-height: 500pt;
     width: 90%;
     padding: 8px;
     display:block;
     margin:auto;
-    border: 3px dashed #e44;
+    border: 3px dashed #e62;
+}
+img.right {
+    max-width: 30%;
+    rotate: -90deg;
+    transform: scaleY(-1);
+    float: right;
+}
+img.left {
+    max-width: 30%;
+    rotate: -90deg;
+    float: left;
 }
 
 body {
     font-family: "Futura PT", "Verdana", sans-serif;
     font-weight: normal;
     text-rendering: optimizeLegibility;
-    background: #eeeeee;
+    background: linear-gradient(to right bottom, #fff4e6, #f6fbff);
     margin: 4px;
     overflow-x: hidden;
     
