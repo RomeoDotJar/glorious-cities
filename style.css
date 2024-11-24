@@ -1,9 +1,12 @@
 @import url("fnt/futurapt/style.css");
 
 h1, h2, h3, h4 {
+    padding: 10px;
+    padding-right: 1em;
+    padding-left: 1em;
+    margin-top: 0;
     text-shadow: 0px 0px 8px #fff4e6;
     z-index: 200;
-    padding: 10px;
     color: #111;
     font-size: 20pt;
     text-align: center;
@@ -11,22 +14,26 @@ h1, h2, h3, h4 {
 h3 {
     text-align: left;
     padding: 0;
+    padding-left: 1em;
 }
 h2 {
     font-size: 26pt;
 }
 h1 {
-    margin-top: 50px;
+    padding-top: 50px;
     font-size: 38pt;
 }
 
 p, li, dd {
+    padding-right: 1em;
+    text-shadow: 0px 0px 8px #fff4e6;
     line-height: 150%;
     padding: 20px;
     color: #444;
 }
 p.weak, dd {
     padding: 0;
+    padding-right: 1em;
     font-size: 14pt;
 }
 p.power {
@@ -52,9 +59,16 @@ hr.transparent {
 }
 
 div {
+    position: relative;
     margin: auto;
+    display: block;
 }
-div.main {
+div.mainheader {
+    z-index: -250;
+    backdrop-filter:  blur(1px);
+    background-color: #fff4e6aa;
+}
+div.main, div.mainheader {
     max-width: 600pt;
     align-items: start;
 }
@@ -84,6 +98,19 @@ div.city {
 img {
     z-index: -200;
 }
+img.bg {
+    z-index: -300;
+    position: absolute;
+    object-fit: cover;
+    left: 0%;
+    right:0%;
+    top: 0%;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+
+    opacity: 40%;
+}
 img.gallery {
     max-height: 500pt;
     width: 90%;
@@ -92,20 +119,18 @@ img.gallery {
     margin:auto;
     border: 3px dashed #e62;
 }
-img.right {
+img.right, img.left {
     position: absolute;
-    right:-10%;
-    top:7ch;
+    top: 16ch;
     max-width: 30%;
     rotate: -90deg;
+}
+img.right {
+    right:-10%;
     transform: scaleY(-1);
 }
 img.left {
-    position: absolute;
     left:-10%;
-    top:7ch;
-    max-width: 30%;
-    rotate: -90deg;
 }
 
 body {
@@ -113,7 +138,7 @@ body {
     font-weight: normal;
     text-rendering: optimizeLegibility;
     background: linear-gradient(to right bottom, #fff4e6, #f6fbff);
-    margin: 4px;
+    margin: auto;
     overflow-x: hidden;
     
     font-size: 17pt;
@@ -122,7 +147,11 @@ body {
 
 @media (max-width: 768px) 
 {
-   p
+    img.right, img.left {
+        top: 6ch;
+    }
+
+   p, li
    {
     line-height:130%;
     font-size: 14pt; 
