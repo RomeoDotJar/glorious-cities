@@ -1,4 +1,4 @@
-const version = 'v1.4.2';
+const version = 'v1.4.3';
 console.log(version);
 
 const app = new PIXI.Application()
