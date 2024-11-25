@@ -1,4 +1,4 @@
-const version = 'v1.2';
+const version = 'v1.4';
 console.log(version);
 
 const app = new PIXI.Application()
@@ -349,10 +349,6 @@ app.ticker.add((ticker) => {
         if (root.hovered && focused) {
             scale *= 1.1;
 
-            if (dist<1) {
-                citynameBgG.tint = 0xFFFFEE;
-                bg.tint = 0xFFFFEE;
-            }
             if (root.held) {
                 scale*=.75;
             }

@@ -7,9 +7,10 @@ h1, h2, h3, h4 {
     margin-top: 0;
     text-shadow: 0px 0px 8px #fff4e6;
     z-index: 200;
-    color: #111;
     font-size: 20pt;
     text-align: center;
+
+    color: #511;
 }
 h3 {
     text-align: left;
@@ -20,6 +21,7 @@ h2 {
     font-size: 26pt;
 }
 h1 {
+    color: #111;
     padding-top: 50px;
     font-size: 38pt;
 }
@@ -65,7 +67,6 @@ div {
 }
 div.mainheader {
     z-index: -250;
-    backdrop-filter:  blur(1px);
     background-color: #fff4e6aa;
 }
 div.main, div.mainheader {
@@ -131,6 +132,13 @@ img.right {
 }
 img.left {
     left:-10%;
+}
+
+a:link, a:visited {
+    color: #911;
+}
+a:hover, a:active {
+    color: #c33;
 }
 
 body {
