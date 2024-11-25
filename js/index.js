@@ -1,4 +1,4 @@
-const version = 'v1.4.1';
+const version = 'v1.4.2';
 console.log(version);
 
 const app = new PIXI.Application()
@@ -394,7 +394,7 @@ fetch("json/citydata.json").then((res) => {
     return res.json();
 }).then((data) => {
     load(data);
-    pick(0);
+    rotate(Math.floor(Math.random()*cities.length));
 }).catch((error) => {
     throw new Error(error);
 });
